@@ -6,25 +6,27 @@
     <title>enSimple — Seguimiento de Trámites</title>
     <style>
         :root {
-            --bg:        #0d0f14;
-            --card:      #161920;
-            --card2:     #1c1f28;
-            --border:    #252933;
-            --text:      #eef0f5;
-            --muted:     #7a8099;
-            --green:     #22c55e;
-            --blue:      #4f8ef7;
-            --amber:     #f5a623;
-            --gray:      #3a3f52;
-            --line:      #2a2f40;
+            --bg:       #f5f5f7;
+            --white:    #ffffff;
+            --text:     #1d1d1f;
+            --muted:    #6e6e73;
+            --light:    #aeaeb2;
+            --divider:  #e8e8ed;
+            --blue:     #0071e3;
+            --blue-hov: #0077ed;
+            --green:    #34c759;
+            --amber:    #ff9f0a;
+            --red:      #ff3b30;
+            --shadow:   0 2px 20px rgba(0,0,0,0.07);
+            --shadow-lg:0 8px 40px rgba(0,0,0,0.10);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
 
         body {
             background: var(--bg);
             color: var(--text);
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: -apple-system, 'SF Pro Display', BlinkMacSystemFont, 'Segoe UI', sans-serif;
             min-height: 100vh;
         }
 
@@ -36,74 +38,75 @@
             justify-content: center;
             min-height: 100vh;
             padding: 2rem 1.5rem;
-            text-align: center;
         }
 
         .marca {
-            margin-bottom: 2.5rem;
+            text-align: center;
+            margin-bottom: 3rem;
         }
         .marca-logo {
-            font-size: 2rem;
-            font-weight: 800;
-            letter-spacing: -0.03em;
+            font-size: 2.2rem;
+            font-weight: 700;
+            letter-spacing: -0.04em;
             color: var(--text);
         }
         .marca-logo span { color: var(--blue); }
         .marca-tagline {
-            font-size: 0.82rem;
+            font-size: 0.85rem;
             color: var(--muted);
-            margin-top: 0.3rem;
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
+            margin-top: 0.4rem;
+            letter-spacing: 0.01em;
         }
 
         .caja-busqueda {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 2rem 1.75rem;
+            background: var(--white);
+            border-radius: 22px;
+            padding: 2.5rem 2rem;
             width: 100%;
-            max-width: 380px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+            max-width: 400px;
+            box-shadow: var(--shadow-lg);
+            text-align: center;
         }
 
         .caja-busqueda h2 {
-            font-size: 1rem;
-            font-weight: 600;
+            font-size: 1.4rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
             color: var(--text);
-            margin-bottom: 0.4rem;
+            margin-bottom: 0.5rem;
         }
         .caja-busqueda p {
-            font-size: 0.82rem;
+            font-size: 0.9rem;
             color: var(--muted);
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
+            line-height: 1.5;
         }
 
-        .campo-codigo {
-            position: relative;
-            margin-bottom: 0.85rem;
-        }
         .campo-codigo input {
             width: 100%;
-            background: var(--card2);
-            border: 1.5px solid var(--border);
+            background: var(--bg);
+            border: 1.5px solid var(--divider);
             border-radius: 12px;
-            padding: 0.9rem 1rem;
+            padding: 0.9rem 1.1rem;
             color: var(--text);
-            font-size: 1.05rem;
+            font-size: 1rem;
             font-weight: 600;
-            letter-spacing: 0.1em;
+            letter-spacing: 0.08em;
             text-transform: uppercase;
             outline: none;
-            transition: border-color 0.2s;
+            margin-bottom: 0.85rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            font-family: inherit;
         }
-        .campo-codigo input:focus { border-color: var(--blue); }
+        .campo-codigo input:focus {
+            border-color: var(--blue);
+            box-shadow: 0 0 0 4px rgba(0,113,227,0.12);
+        }
         .campo-codigo input::placeholder {
             text-transform: none;
-            color: var(--muted);
+            color: var(--light);
             font-weight: 400;
             letter-spacing: 0;
-            font-size: 0.9rem;
         }
 
         .btn-primario {
@@ -112,281 +115,318 @@
             color: white;
             border: none;
             border-radius: 12px;
-            padding: 0.9rem;
-            font-size: 0.95rem;
-            font-weight: 700;
+            padding: 0.95rem;
+            font-size: 1rem;
+            font-weight: 600;
             cursor: pointer;
-            transition: opacity 0.2s, transform 0.1s;
-            letter-spacing: 0.01em;
+            transition: background 0.2s, transform 0.1s;
+            font-family: inherit;
+            letter-spacing: -0.01em;
         }
-        .btn-primario:hover { opacity: 0.9; }
+        .btn-primario:hover  { background: var(--blue-hov); }
         .btn-primario:active { transform: scale(0.98); }
-        .btn-primario:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-primario:disabled { background: var(--light); cursor: not-allowed; }
 
-        .msg-error { color: #f87171; font-size: 0.83rem; margin-top: 0.75rem; display: none; }
+        .msg-error {
+            color: var(--red);
+            font-size: 0.85rem;
+            margin-top: 1rem;
+            display: none;
+        }
         .msg-carga {
             color: var(--muted);
-            font-size: 0.83rem;
-            margin-top: 0.75rem;
+            font-size: 0.85rem;
+            margin-top: 1rem;
             display: none;
             animation: pulso 1.5s ease-in-out infinite;
         }
-        @keyframes pulso { 0%,100%{opacity:1} 50%{opacity:0.4} }
+        @keyframes pulso { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
         .footer-busqueda {
-            margin-top: 2rem;
-            font-size: 0.75rem;
-            color: var(--gray);
-            letter-spacing: 0.03em;
+            margin-top: 2.5rem;
+            font-size: 0.78rem;
+            color: var(--light);
         }
 
         /* ─── PROYECTO ─── */
         #paginaProyecto {
-            max-width: 500px;
+            max-width: 560px;
             margin: 0 auto;
-            padding: 1.5rem 1.25rem 4rem;
+            padding: 2rem 1.25rem 5rem;
             display: none;
-            animation: fadeIn 0.35s ease;
+            animation: fadeUp 0.4s cubic-bezier(.4,0,.2,1);
         }
-        @keyframes fadeIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes fadeUp {
+            from { opacity:0; transform:translateY(16px) }
+            to   { opacity:1; transform:translateY(0) }
+        }
 
+        /* Nav */
         .nav-top {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 1.75rem;
+            margin-bottom: 2rem;
         }
         .btn-volver {
-            background: none;
+            background: var(--white);
             border: none;
-            color: var(--muted);
+            border-radius: 99px;
+            color: var(--blue);
             cursor: pointer;
             font-size: 0.88rem;
-            padding: 0;
-            display: flex;
-            align-items: center;
-            gap: 0.35rem;
-            transition: color 0.2s;
+            font-weight: 600;
+            padding: 0.45rem 1rem;
+            box-shadow: var(--shadow);
+            font-family: inherit;
+            transition: box-shadow 0.2s;
         }
-        .btn-volver:hover { color: var(--text); }
+        .btn-volver:hover { box-shadow: var(--shadow-lg); }
         .nav-marca {
-            font-size: 0.85rem;
+            font-size: 0.88rem;
             font-weight: 700;
             color: var(--muted);
-            letter-spacing: 0.02em;
         }
         .nav-marca span { color: var(--blue); }
 
+        /* Cabecera */
         .cabecera-proyecto {
+            margin-bottom: 1.5rem;
+        }
+        .cabecera-top {
             display: flex;
             align-items: flex-start;
             justify-content: space-between;
-            margin-bottom: 1.25rem;
         }
         .codigo-proyecto {
-            font-size: 1.75rem;
+            font-size: 2rem;
             font-weight: 800;
-            letter-spacing: -0.02em;
+            letter-spacing: -0.04em;
+            color: var(--text);
         }
         .nombre-cliente {
+            font-size: 1rem;
             color: var(--muted);
-            font-size: 0.93rem;
-            margin-top: 0.2rem;
+            margin-top: 0.25rem;
+            font-weight: 400;
         }
         .btn-contacto {
-            background: var(--card2);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            color: var(--text);
-            padding: 0.5rem 0.9rem;
+            background: var(--blue);
+            border: none;
+            border-radius: 99px;
+            color: white;
+            padding: 0.5rem 1.1rem;
             cursor: pointer;
-            font-size: 0.82rem;
+            font-size: 0.85rem;
             font-weight: 600;
             white-space: nowrap;
-            transition: border-color 0.2s;
+            font-family: inherit;
+            transition: background 0.2s;
         }
-        .btn-contacto:hover { border-color: var(--blue); }
+        .btn-contacto:hover { background: var(--blue-hov); }
 
-        /* Barra de progreso */
-        .progreso-card {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 1.1rem 1.25rem;
-            margin-bottom: 0.75rem;
+        /* Tarjeta base */
+        .card {
+            background: var(--white);
+            border-radius: 18px;
+            padding: 1.4rem 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: var(--shadow);
         }
+
+        /* Progreso */
         .progreso-header {
             display: flex;
             justify-content: space-between;
             align-items: baseline;
-            margin-bottom: 0.7rem;
+            margin-bottom: 1rem;
         }
-        .progreso-label { font-size: 0.82rem; color: var(--muted); }
-        .progreso-valor { font-size: 0.88rem; font-weight: 700; color: var(--text); }
+        .progreso-titulo {
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+        }
+        .progreso-pct {
+            font-size: 0.9rem;
+            color: var(--muted);
+            font-weight: 500;
+        }
+        .progreso-sub {
+            font-size: 0.82rem;
+            color: var(--muted);
+            margin-bottom: 0.85rem;
+        }
         .barra-fondo {
-            background: var(--card2);
+            background: var(--bg);
             border-radius: 99px;
-            height: 6px;
+            height: 8px;
             overflow: hidden;
         }
         .barra-fill {
             height: 100%;
             border-radius: 99px;
             background: linear-gradient(90deg, var(--blue), var(--green));
-            transition: width 0.8s cubic-bezier(.4,0,.2,1);
+            transition: width 1s cubic-bezier(.4,0,.2,1);
+            width: 0%;
         }
 
-        /* Info card */
-        .tarjeta {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 1rem 1.25rem;
-            margin-bottom: 0.75rem;
-        }
+        /* Info rows */
         .fila-info {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0.58rem 0;
-            border-bottom: 1px solid var(--line);
-            font-size: 0.92rem;
+            padding: 0.7rem 0;
+            border-bottom: 1px solid var(--divider);
+            font-size: 0.93rem;
         }
         .fila-info:last-child { border-bottom: none; }
-        .fila-info .etiqueta { color: var(--muted); }
-        .fila-info .valor { font-weight: 600; }
-        .estado-activo { color: var(--blue); }
+        .fila-info .etiqueta { color: var(--muted); font-weight: 400; }
+        .fila-info .valor    { font-weight: 600; color: var(--text); }
+        .valor.activo        { color: var(--blue); }
 
-        /* Timeline de fases */
-        .titulo-seccion {
-            font-size: 0.72rem;
+        /* Timeline */
+        .card-titulo {
+            font-size: 0.78rem;
             text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: var(--muted);
-            margin-bottom: 1rem;
+            letter-spacing: 0.07em;
+            color: var(--light);
             font-weight: 600;
+            margin-bottom: 1.1rem;
         }
 
-        .timeline {
-            position: relative;
-            padding-left: 1.5rem;
-        }
+        .timeline { position: relative; padding-left: 1.6rem; }
         .timeline::before {
             content: '';
             position: absolute;
-            left: 7px;
-            top: 8px;
-            bottom: 8px;
+            left: 8px;
+            top: 10px;
+            bottom: 10px;
             width: 2px;
-            background: var(--line);
+            background: var(--divider);
+            border-radius: 2px;
         }
 
         .fase-item {
             position: relative;
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
-            padding: 0.55rem 0;
-            font-size: 0.91rem;
+            align-items: center;
+            padding: 0.65rem 0;
+        }
+        .fase-item + .fase-item {
+            border-top: 1px solid var(--divider);
         }
 
         .fase-dot {
             position: absolute;
-            left: -1.5rem;
+            left: -1.6rem;
             top: 50%;
             transform: translateY(-50%);
-            width: 14px;
-            height: 14px;
+            width: 18px;
+            height: 18px;
             border-radius: 50%;
-            border: 2px solid var(--line);
-            background: var(--bg);
-            flex-shrink: 0;
+            border: 2.5px solid var(--divider);
+            background: var(--white);
         }
-        .fase-dot.completado {
-            background: var(--green);
-            border-color: var(--green);
-        }
-        .fase-dot.en-curso {
-            background: var(--blue);
+        .fase-dot.completado { background: var(--green); border-color: var(--green); }
+        .fase-dot.en-curso   {
+            background: var(--white);
             border-color: var(--blue);
-            box-shadow: 0 0 10px #4f8ef760;
+            box-shadow: 0 0 0 4px rgba(0,113,227,0.15);
         }
-        .fase-dot.pendiente {
-            background: var(--bg);
-            border-color: var(--gray);
+        .fase-dot.en-curso::after {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%,-50%);
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: var(--blue);
         }
 
         .fase-nombre {
             flex: 1;
+            font-size: 0.93rem;
+            font-weight: 500;
             color: var(--text);
             padding-right: 1rem;
         }
-        .fase-nombre.pendiente { color: var(--muted); }
+        .fase-nombre.pendiente { color: var(--muted); font-weight: 400; }
 
         .fase-badge {
             font-size: 0.78rem;
             font-weight: 600;
-            padding: 0.2rem 0.55rem;
+            padding: 0.22rem 0.7rem;
             border-radius: 99px;
             white-space: nowrap;
         }
-        .fase-badge.completado { background: #16a34a20; color: var(--green); }
-        .fase-badge.en-curso   { background: #4f8ef720; color: var(--blue); }
-        .fase-badge.pendiente  { background: var(--card2); color: var(--muted); }
+        .fase-badge.completado { background: #d1fae5; color: #059669; }
+        .fase-badge.en-curso   { background: #dbeafe; color: var(--blue); }
+        .fase-badge.pendiente  { background: var(--bg); color: var(--light); }
 
         /* Notas */
         .notas-texto {
-            font-size: 0.88rem;
+            font-size: 0.9rem;
             color: var(--muted);
-            line-height: 1.6;
+            line-height: 1.65;
         }
 
-        /* Contador días */
+        /* Días */
         .dias-card {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 1.5rem;
-            margin-bottom: 0.75rem;
+            background: var(--white);
+            border-radius: 18px;
+            padding: 1.4rem 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: var(--shadow);
             display: flex;
             align-items: center;
-            gap: 1.25rem;
+            gap: 1.5rem;
         }
         .dias-numero {
-            font-size: 2.8rem;
+            font-size: 3.5rem;
             font-weight: 800;
-            color: var(--blue);
+            color: var(--text);
+            letter-spacing: -0.05em;
             line-height: 1;
-            letter-spacing: -0.03em;
         }
-        .dias-info { flex: 1; }
-        .dias-label { font-size: 0.88rem; color: var(--muted); }
-        .dias-sub { font-size: 0.78rem; color: var(--gray); margin-top: 0.2rem; }
+        .dias-label {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+        .dias-sub {
+            font-size: 0.82rem;
+            color: var(--muted);
+            margin-top: 0.2rem;
+        }
 
-        /* Botón documentos */
+        /* Documentos */
         .btn-documentos {
             width: 100%;
-            background: #0f4c3a;
-            color: #4ade80;
-            border: 1px solid #16a34a40;
+            background: var(--blue);
+            color: white;
+            border: none;
             border-radius: 14px;
-            padding: 1rem;
-            font-size: 0.92rem;
+            padding: 1.1rem;
+            font-size: 1rem;
             font-weight: 700;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
             display: none;
-            margin-bottom: 0.75rem;
+            margin-bottom: 1rem;
+            font-family: inherit;
+            letter-spacing: -0.01em;
+            box-shadow: 0 4px 20px rgba(0,113,227,0.25);
         }
-        .btn-documentos:hover { background: #155e47; }
+        .btn-documentos:hover  { background: var(--blue-hov); box-shadow: 0 6px 28px rgba(0,113,227,0.35); }
+        .btn-documentos:active { transform: scale(0.98); }
 
         /* Footer */
         .footer-proyecto {
             text-align: center;
-            margin-top: 2rem;
-            font-size: 0.72rem;
-            color: var(--gray);
-            letter-spacing: 0.04em;
+            margin-top: 2.5rem;
+            font-size: 0.75rem;
+            color: var(--light);
         }
     </style>
 </head>
@@ -401,7 +441,7 @@
 
     <div class="caja-busqueda">
         <h2>Estado de tu proyecto</h2>
-        <p>Ingresa el código que te entregamos al contratar</p>
+        <p>Ingresa el código que te entregamos al contratar el servicio</p>
 
         <div class="campo-codigo">
             <input
@@ -417,7 +457,9 @@
             Consultar mi trámite
         </button>
         <div class="msg-carga" id="msgCarga">Buscando tu proyecto...</div>
-        <div class="msg-error" id="msgError">Código no encontrado. Verifica el código o contacta con nosotros.</div>
+        <div class="msg-error" id="msgError">
+            Código no encontrado. Verifica tu código o contacta con nosotros.
+        </div>
     </div>
 
     <div class="footer-busqueda">by PERIFERIA</div>
@@ -432,33 +474,36 @@
     </div>
 
     <div class="cabecera-proyecto">
-        <div>
-            <div class="codigo-proyecto" id="pCodigo"></div>
-            <div class="nombre-cliente" id="pCliente"></div>
+        <div class="cabecera-top">
+            <div>
+                <div class="codigo-proyecto" id="pCodigo"></div>
+                <div class="nombre-cliente" id="pCliente"></div>
+            </div>
+            <button class="btn-contacto" id="btnContacto" style="display:none">Contactar</button>
         </div>
-        <button class="btn-contacto" id="btnContacto" style="display:none">📞 Contactar</button>
     </div>
 
-    <!-- Barra de progreso -->
-    <div class="progreso-card">
+    <!-- Progreso -->
+    <div class="card">
         <div class="progreso-header">
-            <span class="progreso-label" id="progresoLabel">Cargando...</span>
-            <span class="progreso-valor" id="progresoValor"></span>
+            <div class="progreso-titulo">Progreso general</div>
+            <div class="progreso-pct" id="progresoValor">0%</div>
         </div>
+        <div class="progreso-sub" id="progresoLabel">Cargando etapas...</div>
         <div class="barra-fondo">
-            <div class="barra-fill" id="barraFill" style="width:0%"></div>
+            <div class="barra-fill" id="barraFill"></div>
         </div>
     </div>
 
     <!-- Info -->
-    <div class="tarjeta">
+    <div class="card">
         <div class="fila-info">
             <span class="etiqueta">Tipo de proyecto</span>
             <span class="valor" id="pTipo"></span>
         </div>
         <div class="fila-info">
             <span class="etiqueta">Estado actual</span>
-            <span class="valor estado-activo" id="pEstado"></span>
+            <span class="valor activo" id="pEstado"></span>
         </div>
         <div class="fila-info">
             <span class="etiqueta">Fecha de inicio</span>
@@ -466,22 +511,22 @@
         </div>
     </div>
 
-    <!-- Timeline de fases -->
-    <div class="tarjeta">
-        <div class="titulo-seccion">Etapas del trámite</div>
+    <!-- Timeline -->
+    <div class="card">
+        <div class="card-titulo">Etapas del trámite</div>
         <div class="timeline" id="timeline"></div>
     </div>
 
     <!-- Notas -->
-    <div class="tarjeta" id="tarjetaNotas" style="display:none">
-        <div class="titulo-seccion">Notas de tu proyecto</div>
+    <div class="card" id="tarjetaNotas" style="display:none">
+        <div class="card-titulo">Notas de tu proyecto</div>
         <div class="notas-texto" id="pNotas"></div>
     </div>
 
     <!-- Días -->
     <div class="dias-card">
         <div class="dias-numero" id="pDias">0</div>
-        <div class="dias-info">
+        <div>
             <div class="dias-label">días en trámite</div>
             <div class="dias-sub" id="pFechaDesde"></div>
         </div>
@@ -489,7 +534,7 @@
 
     <!-- Documentos -->
     <button class="btn-documentos" id="btnDocumentos" onclick="abrirDocumentos()">
-        📄 Ver mis Planos y Certificados
+        📁 Ver tus Planos y Certificados
     </button>
 
     <div class="footer-proyecto">enSimple · construcción y diseño bajo control · by PERIFERIA</div>
@@ -501,7 +546,7 @@
     let linkDocumentos = null;
 
     function buscarProyecto() {
-        const codigo   = document.getElementById('inputCodigo').value.trim().toUpperCase();
+        const codigo = document.getElementById('inputCodigo').value.trim().toUpperCase();
         if (!codigo) return;
 
         const btn      = document.getElementById('btnBuscar');
@@ -554,14 +599,12 @@
             document.getElementById('pFechaDesde').textContent = 'desde el ' + data.fechaInicio;
         }
 
-        // Contacto
         if (data.telefono) {
             const btn = document.getElementById('btnContacto');
             btn.style.display = 'block';
             btn.onclick = () => window.open('tel:' + data.telefono);
         }
 
-        // Notas
         if (data.notas) {
             document.getElementById('pNotas').textContent = data.notas;
             document.getElementById('tarjetaNotas').style.display = 'block';
@@ -569,12 +612,10 @@
             document.getElementById('tarjetaNotas').style.display = 'none';
         }
 
-        // Documentos
         linkDocumentos = data.linkDocumentos || null;
         document.getElementById('btnDocumentos').style.display = linkDocumentos ? 'block' : 'none';
 
-        // Progreso
-        const fases      = data.fases || [];
+        const fases       = data.fases || [];
         const completadas = fases.filter(f => f.estado === 'Completado').length;
         const total       = fases.length;
         const pct         = total > 0 ? Math.round((completadas / total) * 100) : 0;
@@ -583,9 +624,8 @@
         document.getElementById('progresoValor').textContent = `${pct}%`;
         setTimeout(() => {
             document.getElementById('barraFill').style.width = pct + '%';
-        }, 100);
+        }, 120);
 
-        // Timeline
         const timeline = document.getElementById('timeline');
         timeline.innerHTML = '';
         fases.forEach(fase => {
@@ -598,9 +638,8 @@
                 </div>`;
         });
 
-        // Mostrar página
-        document.getElementById('paginaBusqueda').style.display  = 'none';
-        document.getElementById('paginaProyecto').style.display  = 'block';
+        document.getElementById('paginaBusqueda').style.display = 'none';
+        document.getElementById('paginaProyecto').style.display = 'block';
         window.scrollTo(0, 0);
     }
 
@@ -617,9 +656,9 @@
     }
 
     function volverBusqueda() {
-        document.getElementById('paginaProyecto').style.display  = 'none';
-        document.getElementById('paginaBusqueda').style.display  = 'flex';
-        document.getElementById('msgError').style.display        = 'none';
+        document.getElementById('paginaProyecto').style.display = 'none';
+        document.getElementById('paginaBusqueda').style.display = 'flex';
+        document.getElementById('msgError').style.display       = 'none';
     }
 
     document.getElementById('inputCodigo').addEventListener('keypress', e => {
