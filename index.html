@@ -3,17 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Seguimiento de Trámites</title>
+    <title>enSimple — Seguimiento de Trámites</title>
     <style>
         :root {
-            --bg: #111318;
-            --card: #1c1f26;
-            --border: #2a2d36;
-            --text: #f0f0f0;
-            --muted: #8a8f9e;
-            --green: #22c55e;
-            --blue: #3b82f6;
-            --gray: #4b5563;
+            --bg:        #0d0f14;
+            --card:      #161920;
+            --card2:     #1c1f28;
+            --border:    #252933;
+            --text:      #eef0f5;
+            --muted:     #7a8099;
+            --green:     #22c55e;
+            --blue:      #4f8ef7;
+            --amber:     #f5a623;
+            --gray:      #3a3f52;
+            --line:      #2a2f40;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -25,86 +28,154 @@
             min-height: 100vh;
         }
 
-        /* ── BÚSQUEDA ── */
+        /* ─── BÚSQUEDA ─── */
         #paginaBusqueda {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            padding: 2rem;
+            padding: 2rem 1.5rem;
             text-align: center;
         }
 
-        .logo { font-size: 1.4rem; font-weight: 700; color: var(--blue); margin-bottom: 0.3rem; }
-        .subtitulo { color: var(--muted); font-size: 0.9rem; margin-bottom: 2.5rem; }
+        .marca {
+            margin-bottom: 2.5rem;
+        }
+        .marca-logo {
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            color: var(--text);
+        }
+        .marca-logo span { color: var(--blue); }
+        .marca-tagline {
+            font-size: 0.82rem;
+            color: var(--muted);
+            margin-top: 0.3rem;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
 
         .caja-busqueda {
             background: var(--card);
             border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 2rem;
+            border-radius: 20px;
+            padding: 2rem 1.75rem;
             width: 100%;
             max-width: 380px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
         }
 
-        .caja-busqueda h2 { font-size: 1rem; font-weight: 600; margin-bottom: 1.25rem; }
-
-        .caja-busqueda input {
-            width: 100%;
-            background: #252830;
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 0.85rem 1rem;
-            color: var(--text);
+        .caja-busqueda h2 {
             font-size: 1rem;
-            letter-spacing: 0.06em;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 0.4rem;
+        }
+        .caja-busqueda p {
+            font-size: 0.82rem;
+            color: var(--muted);
+            margin-bottom: 1.5rem;
+        }
+
+        .campo-codigo {
+            position: relative;
+            margin-bottom: 0.85rem;
+        }
+        .campo-codigo input {
+            width: 100%;
+            background: var(--card2);
+            border: 1.5px solid var(--border);
+            border-radius: 12px;
+            padding: 0.9rem 1rem;
+            color: var(--text);
+            font-size: 1.05rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
             text-transform: uppercase;
             outline: none;
-            margin-bottom: 0.9rem;
+            transition: border-color 0.2s;
         }
-        .caja-busqueda input:focus { border-color: var(--blue); }
-        .caja-busqueda input::placeholder { text-transform: none; color: var(--muted); letter-spacing: 0; }
+        .campo-codigo input:focus { border-color: var(--blue); }
+        .campo-codigo input::placeholder {
+            text-transform: none;
+            color: var(--muted);
+            font-weight: 400;
+            letter-spacing: 0;
+            font-size: 0.9rem;
+        }
 
         .btn-primario {
             width: 100%;
             background: var(--blue);
             color: white;
             border: none;
-            border-radius: 10px;
-            padding: 0.85rem;
-            font-size: 1rem;
-            font-weight: 600;
+            border-radius: 12px;
+            padding: 0.9rem;
+            font-size: 0.95rem;
+            font-weight: 700;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: opacity 0.2s, transform 0.1s;
+            letter-spacing: 0.01em;
         }
-        .btn-primario:hover { background: #2563eb; }
-        .btn-primario:disabled { background: var(--gray); cursor: not-allowed; }
+        .btn-primario:hover { opacity: 0.9; }
+        .btn-primario:active { transform: scale(0.98); }
+        .btn-primario:disabled { opacity: 0.5; cursor: not-allowed; }
 
-        .msg-error { color: #ef4444; font-size: 0.85rem; margin-top: 0.75rem; display: none; }
-        .msg-carga { color: var(--muted); font-size: 0.85rem; margin-top: 0.75rem; display: none; }
-
-        /* ── PROYECTO ── */
-        #paginaProyecto {
-            max-width: 480px;
-            margin: 0 auto;
-            padding: 1.5rem 1.25rem 3rem;
+        .msg-error { color: #f87171; font-size: 0.83rem; margin-top: 0.75rem; display: none; }
+        .msg-carga {
+            color: var(--muted);
+            font-size: 0.83rem;
+            margin-top: 0.75rem;
             display: none;
+            animation: pulso 1.5s ease-in-out infinite;
+        }
+        @keyframes pulso { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+        .footer-busqueda {
+            margin-top: 2rem;
+            font-size: 0.75rem;
+            color: var(--gray);
+            letter-spacing: 0.03em;
         }
 
+        /* ─── PROYECTO ─── */
+        #paginaProyecto {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 1.5rem 1.25rem 4rem;
+            display: none;
+            animation: fadeIn 0.35s ease;
+        }
+        @keyframes fadeIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+
+        .nav-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.75rem;
+        }
         .btn-volver {
             background: none;
             border: none;
             color: var(--muted);
             cursor: pointer;
-            font-size: 0.9rem;
+            font-size: 0.88rem;
             padding: 0;
-            margin-bottom: 1.5rem;
             display: flex;
             align-items: center;
-            gap: 0.4rem;
+            gap: 0.35rem;
+            transition: color 0.2s;
         }
         .btn-volver:hover { color: var(--text); }
+        .nav-marca {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--muted);
+            letter-spacing: 0.02em;
+        }
+        .nav-marca span { color: var(--blue); }
 
         .cabecera-proyecto {
             display: flex;
@@ -112,133 +183,253 @@
             justify-content: space-between;
             margin-bottom: 1.25rem;
         }
-
-        .codigo-proyecto { font-size: 1.7rem; font-weight: 700; }
-        .nombre-cliente { color: var(--muted); font-size: 0.95rem; margin-top: 0.2rem; }
-
+        .codigo-proyecto {
+            font-size: 1.75rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+        .nombre-cliente {
+            color: var(--muted);
+            font-size: 0.93rem;
+            margin-top: 0.2rem;
+        }
         .btn-contacto {
-            background: #1d4ed8;
-            border: none;
+            background: var(--card2);
+            border: 1px solid var(--border);
             border-radius: 10px;
-            color: white;
-            padding: 0.55rem 0.8rem;
+            color: var(--text);
+            padding: 0.5rem 0.9rem;
             cursor: pointer;
-            font-size: 0.9rem;
+            font-size: 0.82rem;
+            font-weight: 600;
             white-space: nowrap;
+            transition: border-color 0.2s;
+        }
+        .btn-contacto:hover { border-color: var(--blue); }
+
+        /* Barra de progreso */
+        .progreso-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.1rem 1.25rem;
+            margin-bottom: 0.75rem;
+        }
+        .progreso-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 0.7rem;
+        }
+        .progreso-label { font-size: 0.82rem; color: var(--muted); }
+        .progreso-valor { font-size: 0.88rem; font-weight: 700; color: var(--text); }
+        .barra-fondo {
+            background: var(--card2);
+            border-radius: 99px;
+            height: 6px;
+            overflow: hidden;
+        }
+        .barra-fill {
+            height: 100%;
+            border-radius: 99px;
+            background: linear-gradient(90deg, var(--blue), var(--green));
+            transition: width 0.8s cubic-bezier(.4,0,.2,1);
         }
 
+        /* Info card */
         .tarjeta {
             background: var(--card);
             border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 1.1rem 1.25rem;
-            margin-bottom: 0.85rem;
+            border-radius: 16px;
+            padding: 1rem 1.25rem;
+            margin-bottom: 0.75rem;
         }
-
         .fila-info {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0.6rem 0;
-            border-bottom: 1px solid var(--border);
-            font-size: 0.93rem;
+            padding: 0.58rem 0;
+            border-bottom: 1px solid var(--line);
+            font-size: 0.92rem;
         }
         .fila-info:last-child { border-bottom: none; }
         .fila-info .etiqueta { color: var(--muted); }
-        .fila-info .valor { font-weight: 500; }
+        .fila-info .valor { font-weight: 600; }
+        .estado-activo { color: var(--blue); }
 
-        .en-curso-texto { color: var(--blue); font-weight: 600; }
-        .completado-texto { color: var(--green); font-weight: 600; }
-        .pendiente-texto { color: var(--muted); }
-
+        /* Timeline de fases */
         .titulo-seccion {
-            font-size: 0.75rem;
+            font-size: 0.72rem;
             text-transform: uppercase;
-            letter-spacing: 0.08em;
+            letter-spacing: 0.1em;
             color: var(--muted);
-            margin-bottom: 0.85rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
         }
 
-        .fila-fase {
+        .timeline {
+            position: relative;
+            padding-left: 1.5rem;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 7px;
+            top: 8px;
+            bottom: 8px;
+            width: 2px;
+            background: var(--line);
+        }
+
+        .fase-item {
+            position: relative;
             display: flex;
-            align-items: center;
-            gap: 0.85rem;
-            padding: 0.6rem 0;
-            border-bottom: 1px solid var(--border);
-            font-size: 0.92rem;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 0.55rem 0;
+            font-size: 0.91rem;
         }
-        .fila-fase:last-child { border-bottom: none; }
 
-        .indicador {
-            width: 10px;
-            height: 10px;
+        .fase-dot {
+            position: absolute;
+            left: -1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 14px;
+            height: 14px;
             border-radius: 50%;
+            border: 2px solid var(--line);
+            background: var(--bg);
             flex-shrink: 0;
         }
-        .indicador.completado { background: var(--green); }
-        .indicador.en-curso { background: var(--blue); box-shadow: 0 0 8px #3b82f680; }
-        .indicador.pendiente { background: var(--gray); }
+        .fase-dot.completado {
+            background: var(--green);
+            border-color: var(--green);
+        }
+        .fase-dot.en-curso {
+            background: var(--blue);
+            border-color: var(--blue);
+            box-shadow: 0 0 10px #4f8ef760;
+        }
+        .fase-dot.pendiente {
+            background: var(--bg);
+            border-color: var(--gray);
+        }
 
-        .nombre-fase { flex: 1; }
+        .fase-nombre {
+            flex: 1;
+            color: var(--text);
+            padding-right: 1rem;
+        }
+        .fase-nombre.pendiente { color: var(--muted); }
 
-        .texto-notas {
-            font-size: 0.9rem;
+        .fase-badge {
+            font-size: 0.78rem;
+            font-weight: 600;
+            padding: 0.2rem 0.55rem;
+            border-radius: 99px;
+            white-space: nowrap;
+        }
+        .fase-badge.completado { background: #16a34a20; color: var(--green); }
+        .fase-badge.en-curso   { background: #4f8ef720; color: var(--blue); }
+        .fase-badge.pendiente  { background: var(--card2); color: var(--muted); }
+
+        /* Notas */
+        .notas-texto {
+            font-size: 0.88rem;
             color: var(--muted);
-            line-height: 1.55;
+            line-height: 1.6;
         }
 
-        .contador-dias {
-            text-align: center;
+        /* Contador días */
+        .dias-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
             padding: 1.5rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
         }
-        .numero-dias { font-size: 2.8rem; font-weight: 700; color: var(--blue); }
-        .label-dias { color: var(--muted); font-size: 0.85rem; margin-top: 0.2rem; }
+        .dias-numero {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: var(--blue);
+            line-height: 1;
+            letter-spacing: -0.03em;
+        }
+        .dias-info { flex: 1; }
+        .dias-label { font-size: 0.88rem; color: var(--muted); }
+        .dias-sub { font-size: 0.78rem; color: var(--gray); margin-top: 0.2rem; }
 
+        /* Botón documentos */
         .btn-documentos {
             width: 100%;
-            background: #1a6b5c;
-            color: white;
-            border: none;
-            border-radius: 12px;
+            background: #0f4c3a;
+            color: #4ade80;
+            border: 1px solid #16a34a40;
+            border-radius: 14px;
             padding: 1rem;
-            font-size: 0.95rem;
-            font-weight: 600;
+            font-size: 0.92rem;
+            font-weight: 700;
             cursor: pointer;
             transition: background 0.2s;
             display: none;
+            margin-bottom: 0.75rem;
         }
-        .btn-documentos:hover { background: #155c4e; }
+        .btn-documentos:hover { background: #155e47; }
+
+        /* Footer */
+        .footer-proyecto {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.72rem;
+            color: var(--gray);
+            letter-spacing: 0.04em;
+        }
     </style>
 </head>
 <body>
 
-<!-- PÁGINA DE BÚSQUEDA -->
+<!-- BÚSQUEDA -->
 <div id="paginaBusqueda">
-    <div class="logo">TrackTrámites</div>
-    <div class="subtitulo">Consulta el estado de tu proyecto en tiempo real</div>
+    <div class="marca">
+        <div class="marca-logo">en<span>Simple</span></div>
+        <div class="marca-tagline">construcción y diseño bajo control</div>
+    </div>
 
     <div class="caja-busqueda">
-        <h2>Ingresa tu código de proyecto</h2>
-        <input
-            type="text"
-            id="inputCodigo"
-            placeholder="Ej: PRJ-2026-001"
-            maxlength="20"
-            autocomplete="off"
-        />
+        <h2>Estado de tu proyecto</h2>
+        <p>Ingresa el código que te entregamos al contratar</p>
+
+        <div class="campo-codigo">
+            <input
+                type="text"
+                id="inputCodigo"
+                placeholder="Ej: PRJ-2026-001"
+                maxlength="20"
+                autocomplete="off"
+                spellcheck="false"
+            />
+        </div>
         <button class="btn-primario" id="btnBuscar" onclick="buscarProyecto()">
-            Ver estado de mi trámite
+            Consultar mi trámite
         </button>
         <div class="msg-carga" id="msgCarga">Buscando tu proyecto...</div>
-        <div class="msg-error" id="msgError">
-            Código no encontrado. Verifica el código o contacta con nosotros.
-        </div>
+        <div class="msg-error" id="msgError">Código no encontrado. Verifica el código o contacta con nosotros.</div>
     </div>
+
+    <div class="footer-busqueda">by PERIFERIA</div>
 </div>
 
-<!-- PÁGINA DE PROYECTO -->
+<!-- PROYECTO -->
 <div id="paginaProyecto">
-    <button class="btn-volver" onclick="volverBusqueda()">← Buscar otro proyecto</button>
+
+    <div class="nav-top">
+        <button class="btn-volver" onclick="volverBusqueda()">← Volver</button>
+        <div class="nav-marca">en<span>Simple</span></div>
+    </div>
 
     <div class="cabecera-proyecto">
         <div>
@@ -248,51 +439,69 @@
         <button class="btn-contacto" id="btnContacto" style="display:none">📞 Contactar</button>
     </div>
 
+    <!-- Barra de progreso -->
+    <div class="progreso-card">
+        <div class="progreso-header">
+            <span class="progreso-label" id="progresoLabel">Cargando...</span>
+            <span class="progreso-valor" id="progresoValor"></span>
+        </div>
+        <div class="barra-fondo">
+            <div class="barra-fill" id="barraFill" style="width:0%"></div>
+        </div>
+    </div>
+
+    <!-- Info -->
     <div class="tarjeta">
         <div class="fila-info">
-            <span class="etiqueta">Proyecto</span>
+            <span class="etiqueta">Tipo de proyecto</span>
             <span class="valor" id="pTipo"></span>
         </div>
         <div class="fila-info">
-            <span class="etiqueta">Estado Actual</span>
-            <span class="valor en-curso-texto" id="pEstado"></span>
+            <span class="etiqueta">Estado actual</span>
+            <span class="valor estado-activo" id="pEstado"></span>
         </div>
         <div class="fila-info">
-            <span class="etiqueta">Fecha de Inicio</span>
+            <span class="etiqueta">Fecha de inicio</span>
             <span class="valor" id="pFecha"></span>
         </div>
     </div>
 
-    <div class="tarjeta" id="tarjetaFases">
-        <div class="titulo-seccion">Etapas del trámite</div>
-        <div id="listaFases"></div>
-    </div>
-
-    <div class="tarjeta" id="tarjetaNotas" style="display:none">
-        <div class="titulo-seccion">Notas</div>
-        <div class="texto-notas" id="pNotas"></div>
-    </div>
-
+    <!-- Timeline de fases -->
     <div class="tarjeta">
-        <div class="contador-dias">
-            <div class="numero-dias" id="pDias">0</div>
-            <div class="label-dias">días en trámite</div>
+        <div class="titulo-seccion">Etapas del trámite</div>
+        <div class="timeline" id="timeline"></div>
+    </div>
+
+    <!-- Notas -->
+    <div class="tarjeta" id="tarjetaNotas" style="display:none">
+        <div class="titulo-seccion">Notas de tu proyecto</div>
+        <div class="notas-texto" id="pNotas"></div>
+    </div>
+
+    <!-- Días -->
+    <div class="dias-card">
+        <div class="dias-numero" id="pDias">0</div>
+        <div class="dias-info">
+            <div class="dias-label">días en trámite</div>
+            <div class="dias-sub" id="pFechaDesde"></div>
         </div>
     </div>
 
+    <!-- Documentos -->
     <button class="btn-documentos" id="btnDocumentos" onclick="abrirDocumentos()">
-        Ver mis Planos y Certificados
+        📄 Ver mis Planos y Certificados
     </button>
+
+    <div class="footer-proyecto">enSimple · construcción y diseño bajo control · by PERIFERIA</div>
 </div>
 
 <script>
-    // ⚠️  REEMPLAZA ESTA URL con la URL de tu Google Apps Script desplegado
     const API_URL = 'https://script.google.com/macros/s/AKfycbyEWb7M1y-VxI_j9h-Rvo_SywfC7JbYfJjfZLTwe3MMCOIfli2DbF-Rmm2LizPY9RY2/exec';
 
     let linkDocumentos = null;
 
     function buscarProyecto() {
-        const codigo = document.getElementById('inputCodigo').value.trim().toUpperCase();
+        const codigo   = document.getElementById('inputCodigo').value.trim().toUpperCase();
         if (!codigo) return;
 
         const btn      = document.getElementById('btnBuscar');
@@ -303,17 +512,17 @@
         msgCarga.style.display = 'block';
         btn.disabled = true;
 
-        const callbackName = 'jsonpCb_' + Date.now();
+        const cbName = 'cb_' + Date.now();
         const script = document.createElement('script');
 
         const limpiar = () => {
-            delete window[callbackName];
+            delete window[cbName];
             if (script.parentNode) document.body.removeChild(script);
             msgCarga.style.display = 'none';
             btn.disabled = false;
         };
 
-        window[callbackName] = function(data) {
+        window[cbName] = function(data) {
             limpiar();
             if (data.error) {
                 msgError.textContent = 'Código no encontrado. Verifica tu código o contacta con nosotros.';
@@ -329,23 +538,27 @@
             msgError.style.display = 'block';
         };
 
-        script.src = `${API_URL}?code=${encodeURIComponent(codigo)}&callback=${callbackName}`;
+        script.src = `${API_URL}?code=${encodeURIComponent(codigo)}&callback=${cbName}`;
         document.body.appendChild(script);
     }
 
     function mostrarProyecto(data) {
-        document.getElementById('pCodigo').textContent = data.codigo;
+        document.getElementById('pCodigo').textContent  = data.codigo;
         document.getElementById('pCliente').textContent = data.cliente;
-        document.getElementById('pTipo').textContent = data.tipo;
-        document.getElementById('pEstado').textContent = data.estado;
-        document.getElementById('pFecha').textContent = data.fechaInicio || '—';
-        document.getElementById('pDias').textContent = data.diasTramite ?? 0;
+        document.getElementById('pTipo').textContent    = data.tipo;
+        document.getElementById('pEstado').textContent  = data.estado;
+        document.getElementById('pFecha').textContent   = data.fechaInicio || '—';
+        document.getElementById('pDias').textContent    = data.diasTramite ?? 0;
 
-        // Botón de contacto
+        if (data.fechaInicio) {
+            document.getElementById('pFechaDesde').textContent = 'desde el ' + data.fechaInicio;
+        }
+
+        // Contacto
         if (data.telefono) {
-            const btnContacto = document.getElementById('btnContacto');
-            btnContacto.style.display = 'block';
-            btnContacto.onclick = () => window.open(`tel:${data.telefono}`);
+            const btn = document.getElementById('btnContacto');
+            btn.style.display = 'block';
+            btn.onclick = () => window.open('tel:' + data.telefono);
         }
 
         // Notas
@@ -356,27 +569,38 @@
             document.getElementById('tarjetaNotas').style.display = 'none';
         }
 
-        // Botón de documentos
+        // Documentos
         linkDocumentos = data.linkDocumentos || null;
-        const btnDocs = document.getElementById('btnDocumentos');
-        btnDocs.style.display = linkDocumentos ? 'block' : 'none';
+        document.getElementById('btnDocumentos').style.display = linkDocumentos ? 'block' : 'none';
 
-        // Fases
-        const lista = document.getElementById('listaFases');
-        lista.innerHTML = '';
-        (data.fases || []).forEach(fase => {
+        // Progreso
+        const fases      = data.fases || [];
+        const completadas = fases.filter(f => f.estado === 'Completado').length;
+        const total       = fases.length;
+        const pct         = total > 0 ? Math.round((completadas / total) * 100) : 0;
+
+        document.getElementById('progresoLabel').textContent = `${completadas} de ${total} etapas completadas`;
+        document.getElementById('progresoValor').textContent = `${pct}%`;
+        setTimeout(() => {
+            document.getElementById('barraFill').style.width = pct + '%';
+        }, 100);
+
+        // Timeline
+        const timeline = document.getElementById('timeline');
+        timeline.innerHTML = '';
+        fases.forEach(fase => {
             const cls = claseEstado(fase.estado);
-            lista.innerHTML += `
-                <div class="fila-fase">
-                    <div class="indicador ${cls}"></div>
-                    <div class="nombre-fase">${fase.nombre}</div>
-                    <div class="${cls}-texto">${fase.estado || 'Pendiente'}</div>
+            timeline.innerHTML += `
+                <div class="fase-item">
+                    <div class="fase-dot ${cls}"></div>
+                    <div class="fase-nombre ${cls === 'pendiente' ? 'pendiente' : ''}">${fase.nombre}</div>
+                    <div class="fase-badge ${cls}">${fase.estado || 'Pendiente'}</div>
                 </div>`;
         });
 
-        // Cambiar pantalla
-        document.getElementById('paginaBusqueda').style.display = 'none';
-        document.getElementById('paginaProyecto').style.display = 'block';
+        // Mostrar página
+        document.getElementById('paginaBusqueda').style.display  = 'none';
+        document.getElementById('paginaProyecto').style.display  = 'block';
         window.scrollTo(0, 0);
     }
 
@@ -384,7 +608,7 @@
         if (!estado) return 'pendiente';
         const s = estado.toLowerCase();
         if (s === 'completado') return 'completado';
-        if (s === 'en curso') return 'en-curso';
+        if (s === 'en curso')   return 'en-curso';
         return 'pendiente';
     }
 
@@ -393,9 +617,9 @@
     }
 
     function volverBusqueda() {
-        document.getElementById('paginaProyecto').style.display = 'none';
-        document.getElementById('paginaBusqueda').style.display = 'flex';
-        document.getElementById('msgError').style.display = 'none';
+        document.getElementById('paginaProyecto').style.display  = 'none';
+        document.getElementById('paginaBusqueda').style.display  = 'flex';
+        document.getElementById('msgError').style.display        = 'none';
     }
 
     document.getElementById('inputCodigo').addEventListener('keypress', e => {
