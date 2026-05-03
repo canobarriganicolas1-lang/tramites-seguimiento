@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seguimiento de Trámites</title>
+    <style>
+        :root {
+            --bg: #111318;
+            --card: #1c1f26;
+            --border: #2a2d36;
+            --text: #f0f0f0;
+            --muted: #8a8f9e;
+            --green: #22c55e;
+            --blue: #3b82f6;
+            --gray: #4b5563;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            min-height: 100vh;
+        }
+
+        /* ── BÚSQUEDA ── */
+        #paginaBusqueda {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .logo { font-size: 1.4rem; font-weight: 700; color: var(--blue); margin-bottom: 0.3rem; }
+        .subtitulo { color: var(--muted); font-size: 0.9rem; margin-bottom: 2.5rem; }
+
+        .caja-busqueda {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            width: 100%;
+            max-width: 380px;
+        }
+
+        .caja-busqueda h2 { font-size: 1rem; font-weight: 600; margin-bottom: 1.25rem; }
+
+        .caja-busqueda input {
+            width: 100%;
+            background: #252830;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 0.85rem 1rem;
+            color: var(--text);
+            font-size: 1rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            outline: none;
+            margin-bottom: 0.9rem;
+        }
+        .caja-busqueda input:focus { border-color: var(--blue); }
+        .caja-busqueda input::placeholder { text-transform: none; color: var(--muted); letter-spacing: 0; }
+
+        .btn-primario {
+            width: 100%;
+            background: var(--blue);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 0.85rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn-primario:hover { background: #2563eb; }
+        .btn-primario:disabled { background: var(--gray); cursor: not-allowed; }
+
+        .msg-error { color: #ef4444; font-size: 0.85rem; margin-top: 0.75rem; display: none; }
+        .msg-carga { color: var(--muted); font-size: 0.85rem; margin-top: 0.75rem; display: none; }
+
+        /* ── PROYECTO ── */
+        #paginaProyecto {
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 1.5rem 1.25rem 3rem;
+            display: none;
+        }
+
+        .btn-volver {
+            background: none;
+            border: none;
+            color: var(--muted);
+            cursor: pointer;
+            font-size: 0.9rem;
+            padding: 0;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .btn-volver:hover { color: var(--text); }
+
+        .cabecera-proyecto {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 1.25rem;
+        }
+
+        .codigo-proyecto { font-size: 1.7rem; font-weight: 700; }
+        .nombre-cliente { color: var(--muted); font-size: 0.95rem; margin-top: 0.2rem; }
+
+        .btn-contacto {
+            background: #1d4ed8;
+            border: none;
+            border-radius: 10px;
+            color: white;
+            padding: 0.55rem 0.8rem;
+            cursor: pointer;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+
+        .tarjeta {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 1.1rem 1.25rem;
+            margin-bottom: 0.85rem;
+        }
+
+        .fila-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.6rem 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.93rem;
+        }
+        .fila-info:last-child { border-bottom: none; }
+        .fila-info .etiqueta { color: var(--muted); }
+        .fila-info .valor { font-weight: 500; }
+
+        .en-curso-texto { color: var(--blue); font-weight: 600; }
+        .completado-texto { color: var(--green); font-weight: 600; }
+        .pendiente-texto { color: var(--muted); }
+
+        .titulo-seccion {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--muted);
+            margin-bottom: 0.85rem;
+        }
+
+        .fila-fase {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+            padding: 0.6rem 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.92rem;
+        }
+        .fila-fase:last-child { border-bottom: none; }
+
+        .indicador {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        .indicador.completado { background: var(--green); }
+        .indicador.en-curso { background: var(--blue); box-shadow: 0 0 8px #3b82f680; }
+        .indicador.pendiente { background: var(--gray); }
+
+        .nombre-fase { flex: 1; }
+
+        .texto-notas {
+            font-size: 0.9rem;
+            color: var(--muted);
+            line-height: 1.55;
+        }
+
+        .contador-dias {
+            text-align: center;
+            padding: 1.5rem;
+        }
+        .numero-dias { font-size: 2.8rem; font-weight: 700; color: var(--blue); }
+        .label-dias { color: var(--muted); font-size: 0.85rem; margin-top: 0.2rem; }
+
+        .btn-documentos {
+            width: 100%;
+            background: #1a6b5c;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 1rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: none;
+        }
+        .btn-documentos:hover { background: #155c4e; }
+    </style>
+</head>
+<body>
+
+<!-- PÁGINA DE BÚSQUEDA -->
+<div id="paginaBusqueda">
+    <div class="logo">TrackTrámites</div>
+    <div class="subtitulo">Consulta el estado de tu proyecto en tiempo real</div>
+
+    <div class="caja-busqueda">
+        <h2>Ingresa tu código de proyecto</h2>
+        <input
+            type="text"
+            id="inputCodigo"
+            placeholder="Ej: PRJ-2026-001"
+            maxlength="20"
+            autocomplete="off"
+        />
+        <button class="btn-primario" id="btnBuscar" onclick="buscarProyecto()">
+            Ver estado de mi trámite
+        </button>
+        <div class="msg-carga" id="msgCarga">Buscando tu proyecto...</div>
+        <div class="msg-error" id="msgError">
+            Código no encontrado. Verifica el código o contacta con nosotros.
+        </div>
+    </div>
+</div>
+
+<!-- PÁGINA DE PROYECTO -->
+<div id="paginaProyecto">
+    <button class="btn-volver" onclick="volverBusqueda()">← Buscar otro proyecto</button>
+
+    <div class="cabecera-proyecto">
+        <div>
+            <div class="codigo-proyecto" id="pCodigo"></div>
+            <div class="nombre-cliente" id="pCliente"></div>
+        </div>
+        <button class="btn-contacto" id="btnContacto" style="display:none">📞 Contactar</button>
+    </div>
+
+    <div class="tarjeta">
+        <div class="fila-info">
+            <span class="etiqueta">Proyecto</span>
+            <span class="valor" id="pTipo"></span>
+        </div>
+        <div class="fila-info">
+            <span class="etiqueta">Estado Actual</span>
+            <span class="valor en-curso-texto" id="pEstado"></span>
+        </div>
+        <div class="fila-info">
+            <span class="etiqueta">Fecha de Inicio</span>
+            <span class="valor" id="pFecha"></span>
+        </div>
+    </div>
+
+    <div class="tarjeta" id="tarjetaFases">
+        <div class="titulo-seccion">Etapas del trámite</div>
+        <div id="listaFases"></div>
+    </div>
+
+    <div class="tarjeta" id="tarjetaNotas" style="display:none">
+        <div class="titulo-seccion">Notas</div>
+        <div class="texto-notas" id="pNotas"></div>
+    </div>
+
+    <div class="tarjeta">
+        <div class="contador-dias">
+            <div class="numero-dias" id="pDias">0</div>
+            <div class="label-dias">días en trámite</div>
+        </div>
+    </div>
+
+    <button class="btn-documentos" id="btnDocumentos" onclick="abrirDocumentos()">
+        Ver mis Planos y Certificados
+    </button>
+</div>
+
+<script>
+    // ⚠️  REEMPLAZA ESTA URL con la URL de tu Google Apps Script desplegado
+    const API_URL = 'PEGA_AQUI_TU_URL_DE_APPS_SCRIPT';
+
+    let linkDocumentos = null;
+
+    async function buscarProyecto() {
+        const codigo = document.getElementById('inputCodigo').value.trim().toUpperCase();
+        if (!codigo) return;
+
+        const btn = document.getElementById('btnBuscar');
+        const msgError = document.getElementById('msgError');
+        const msgCarga = document.getElementById('msgCarga');
+
+        msgError.style.display = 'none';
+        msgCarga.style.display = 'block';
+        btn.disabled = true;
+
+        try {
+            const res = await fetch(`${API_URL}?code=${encodeURIComponent(codigo)}`);
+            const data = await res.json();
+
+            msgCarga.style.display = 'none';
+            btn.disabled = false;
+
+            if (data.error) {
+                msgError.textContent = 'Código no encontrado. Verifica tu código o contacta con nosotros.';
+                msgError.style.display = 'block';
+                return;
+            }
+
+            mostrarProyecto(data);
+
+        } catch (err) {
+            msgCarga.style.display = 'none';
+            btn.disabled = false;
+            msgError.textContent = 'Error de conexión. Intenta nuevamente.';
+            msgError.style.display = 'block';
+        }
+    }
+
+    function mostrarProyecto(data) {
+        document.getElementById('pCodigo').textContent = data.codigo;
+        document.getElementById('pCliente').textContent = data.cliente;
+        document.getElementById('pTipo').textContent = data.tipo;
+        document.getElementById('pEstado').textContent = data.estado;
+        document.getElementById('pFecha').textContent = data.fechaInicio || '—';
+        document.getElementById('pDias').textContent = data.diasTramite ?? 0;
+
+        // Botón de contacto
+        if (data.telefono) {
+            const btnContacto = document.getElementById('btnContacto');
+            btnContacto.style.display = 'block';
+            btnContacto.onclick = () => window.open(`tel:${data.telefono}`);
+        }
+
+        // Notas
+        if (data.notas) {
+            document.getElementById('pNotas').textContent = data.notas;
+            document.getElementById('tarjetaNotas').style.display = 'block';
+        } else {
+            document.getElementById('tarjetaNotas').style.display = 'none';
+        }
+
+        // Botón de documentos
+        linkDocumentos = data.linkDocumentos || null;
+        const btnDocs = document.getElementById('btnDocumentos');
+        btnDocs.style.display = linkDocumentos ? 'block' : 'none';
+
+        // Fases
+        const lista = document.getElementById('listaFases');
+        lista.innerHTML = '';
+        (data.fases || []).forEach(fase => {
+            const cls = claseEstado(fase.estado);
+            lista.innerHTML += `
+                <div class="fila-fase">
+                    <div class="indicador ${cls}"></div>
+                    <div class="nombre-fase">${fase.nombre}</div>
+                    <div class="${cls}-texto">${fase.estado || 'Pendiente'}</div>
+                </div>`;
+        });
+
+        // Cambiar pantalla
+        document.getElementById('paginaBusqueda').style.display = 'none';
+        document.getElementById('paginaProyecto').style.display = 'block';
+        window.scrollTo(0, 0);
+    }
+
+    function claseEstado(estado) {
+        if (!estado) return 'pendiente';
+        const s = estado.toLowerCase();
+        if (s === 'completado') return 'completado';
+        if (s === 'en curso') return 'en-curso';
+        return 'pendiente';
+    }
+
+    function abrirDocumentos() {
+        if (linkDocumentos) window.open(linkDocumentos, '_blank');
+    }
+
+    function volverBusqueda() {
+        document.getElementById('paginaProyecto').style.display = 'none';
+        document.getElementById('paginaBusqueda').style.display = 'flex';
+        document.getElementById('msgError').style.display = 'none';
+    }
+
+    document.getElementById('inputCodigo').addEventListener('keypress', e => {
+        if (e.key === 'Enter') buscarProyecto();
+    });
+</script>
+</body>
+</html>
