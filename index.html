@@ -287,15 +287,15 @@
 
 <script>
     // ⚠️  REEMPLAZA ESTA URL con la URL de tu Google Apps Script desplegado
-    const API_URL = 'PEGA_AQUI_TU_URL_DE_APPS_SCRIPT';
+    const API_URL = 'https://script.google.com/macros/s/AKfycbyEWb7M1y-VxI_j9h-Rvo_SywfC7JbYfJjfZLTwe3MMCOIfli2DbF-Rmm2LizPY9RY2/exec';
 
     let linkDocumentos = null;
 
-    async function buscarProyecto() {
+    function buscarProyecto() {
         const codigo = document.getElementById('inputCodigo').value.trim().toUpperCase();
         if (!codigo) return;
 
-        const btn = document.getElementById('btnBuscar');
+        const btn      = document.getElementById('btnBuscar');
         const msgError = document.getElementById('msgError');
         const msgCarga = document.getElementById('msgCarga');
 
@@ -303,27 +303,34 @@
         msgCarga.style.display = 'block';
         btn.disabled = true;
 
-        try {
-            const res = await fetch(`${API_URL}?code=${encodeURIComponent(codigo)}`);
-            const data = await res.json();
+        const callbackName = 'jsonpCb_' + Date.now();
+        const script = document.createElement('script');
 
+        const limpiar = () => {
+            delete window[callbackName];
+            if (script.parentNode) document.body.removeChild(script);
             msgCarga.style.display = 'none';
             btn.disabled = false;
+        };
 
+        window[callbackName] = function(data) {
+            limpiar();
             if (data.error) {
                 msgError.textContent = 'Código no encontrado. Verifica tu código o contacta con nosotros.';
                 msgError.style.display = 'block';
                 return;
             }
-
             mostrarProyecto(data);
+        };
 
-        } catch (err) {
-            msgCarga.style.display = 'none';
-            btn.disabled = false;
+        script.onerror = function() {
+            limpiar();
             msgError.textContent = 'Error de conexión. Intenta nuevamente.';
             msgError.style.display = 'block';
-        }
+        };
+
+        script.src = `${API_URL}?code=${encodeURIComponent(codigo)}&callback=${callbackName}`;
+        document.body.appendChild(script);
     }
 
     function mostrarProyecto(data) {
